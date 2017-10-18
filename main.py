@@ -110,12 +110,16 @@ def display_post():
         if blog_id:
             return render_template('post.html', blog=blog)
 
-#@app.route('/blog', methods=['POST', 'GET'])
-#def index():
+
+
+@app.route('/blog', methods=['POST', 'GET'])
+def display_blogs():
        
   
-    #blogs = Blog.query.all()
-    #return render_template('blog.html', blogs=blogs)
+    blogs = Blog.query.all()
+    return render_template('blog.html', blogs=blogs)
+
+
 
 
 @app.route('/singleuser', methods=['POST', 'GET'])
