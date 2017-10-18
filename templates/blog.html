@@ -3,7 +3,7 @@
     
 
     
-        <h2>Build a Blog</h2>
+        <h2>All Blogs</h2>
         
         
         {%if blogs|length == 0%}
@@ -16,23 +16,14 @@
       
             <form action="POST" method="post" value={{blog.id}}>
                 <li><h2><a href="/post?id={{blog.id}}"> {{blog.title}}</a></h2>
-                <p>{{blog.body}}</p></li>
-
-                
-            <!--<input type="error" name="title_error" value="{{ id }}"/>-->
+                <p>{{blog.body}}</p></li>  
         
             </form>
         
           {% endfor %}
-        {%endif%}
+        {% endif %}
         </ul>
-        
-
-        
-        
-        
-        
-         
+            
         
 {% endblock %}
 

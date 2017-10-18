@@ -26,6 +26,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(120))
+    blogs = db.relationship('Blog', backref='writer')
 
     def __init__(self, email, password):
         self.email= email
@@ -98,6 +99,8 @@ def logout():
     del session['email']
     return redirect('/')   
 
+
+
 @app.route('/post', methods=['POST', 'GET'])
 def display_post():
     if request.method == 'GET':
@@ -107,14 +110,21 @@ def display_post():
         if blog_id:
             return render_template('post.html', blog=blog)
 
+#@app.route('/blog', methods=['POST', 'GET'])
+#def index():
+       
+  
+    #blogs = Blog.query.all()
+    #return render_template('blog.html', blogs=blogs)
+
 
 @app.route('/singleuser', methods=['POST', 'GET'])
 def display_user_posts():
     if request.method == 'GET':
-        user_id = request.args.get('User.id')
-        user = User.query.filter_by(id=user_id).first()
-        if user_id:
-            return render_template('singleuser', user=user)
+        user_id = request.args.get('user.id')
+        user = User.query.filter_by(id=user_id)
+        if user:
+            return render_template('singleuser.html', user=user)
 
     
 
@@ -136,6 +146,7 @@ def new_post():
     if request.method == "POST":
         title =request.form['title']
         body = request.form['body']
+        writer = User.query.filter_by(email=session['email']).first()
         if (title == ""):
             title_error = "Please enter title"
             return render_template("addpost.html", title_error=title_error)
@@ -145,7 +156,7 @@ def new_post():
         
         else:
             
-            new_blog = Blog(title, body)
+            new_blog = Blog(title, body, writer)
         
             #new_body = Blog(body)
             db.session.add(new_blog)
