@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<form value={{user.id}}>
+<p>Where are we?
+    <h2><strong>{{user.email}}</strong></h2>
+</p>
+
+<p>
+    {{blog.body}}
+</p>
+
+<!--<input type="submit" value="Post to Blog"/>-->
+{% endblock %}   
