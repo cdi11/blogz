@@ -36,9 +36,9 @@ class User(db.Model):
 
    
 
-    def __repr__(self):
-        return '<Title %r>' % self.title
-        return '<Body %r>' % self.body
+    #def __repr__(self):
+        #return '<Title %r>' % self.title
+        #return '<Body %r>' % self.body
 
 
 
@@ -77,21 +77,48 @@ def signup():
         email = request.form['email']
         password = request.form['password']
         verify = request.form['verify']
-        #TODO - vlaidate user's data
+        if not is_email(email):
+            flash(email + '" does not seem like an email address')
+            return redirect('/signup')
+        email_db_count = User.query.filter_by(email=email).count()
+        if email_db_count > 0:
+            flash(email + '" is already taken please click login.')
+            return redirect('/signup')
+        if password != verify:
+            flash('passwords did not match')
+            return redirect('/signup')
+        user = User(email=email, password=password)
+        db.session.add(user)
+        db.session.commit()
+        session['user'] = user.email
+        return redirect("/")
+        
+            #return '<h1>You already have an account.  Please <a href="/login">login.</a></h1>'
+    
+    else:
+        
+        return render_template('signup.html')
 
-        existing_user = User.query.filter_by(email=email).first()
-        if not existing_user:
-            new_user = User(email, password)
-            db.session.add(new_user)
-            db.session.commit()
-            session['email'] = email
+def is_email(string):
+    # for our purposes, an email string has an '@' followed by a '.'
+    # there is an embedded language called 'regular expression' that would crunch this implementation down
+    # to a one-liner, but we'll keep it simple:
+    atsign_index = string.find('@')
+    atsign_present = atsign_index >= 0
+    if not atsign_present:
+        return False
+    else:
+        domain_dot_index = string.find('.', atsign_index)
+        domain_dot_present = domain_dot_index >= 0
+        return domain_dot_present
+        
+        
+            
+        
+                
+    
 
-            return redirect('/')
-        else:
-            #TODO - use better response messaging
-            return '<h1>Duplicate user</h1>'
-
-    return render_template('signup.html')   
+    #return render_template('signup.html')   
 
 
 @app.route('/logout')
@@ -123,14 +150,17 @@ def display_blogs():
 
 
 @app.route('/singleuser', methods=['POST', 'GET'])
-def display_user_posts():
+def display_user():
     if request.method == 'GET':
-        user_id = request.args.get('user.id')
-        user = User.query.filter_by(id=user_id)
+        user_id = (request.args.get('id'))
+        user = User.query.filter_by(id=user_id).first()
+        blogs = Blog.query.filter_by(writer_id=user_id)
+        
         if user:
-            return render_template('singleuser.html', user=user)
+            return render_template('singleuser.html', user=user, blogs=blogs)
 
-    
+    #return render_template('singleuser.html', user=user)
+
 
     
 @app.route("/addpost", methods=['POST', 'GET'])

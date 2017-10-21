@@ -2,13 +2,17 @@
 
 {% block content %}
 
-<form value={{user.id}}/>
-<p>Where are we?
-    <h2><strong>HELP{{user.email}}</strong></h2>
-</p>
-
+<form value={{user}}>
 <p>
-    This should be the blogs, but I can't get variables to appear
+    <h2><strong>{{user.email}}</strong></h2>
+</p>
+{% for blog in blogs %}
+    <h3>{{blog.title}}</h3>
+    <h5>{{blog.body}}</h5>
+
+{% endfor %}
+<p>
+    
 </p>
 
 {% endblock %}   
