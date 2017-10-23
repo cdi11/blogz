@@ -35,14 +35,6 @@ class User(db.Model):
 
 
    
-
-    #def __repr__(self):
-        #return '<Title %r>' % self.title
-        #return '<Body %r>' % self.body
-
-
-
-   
 @app.route('/')
 def index():     
     users = User.query.all()
@@ -65,7 +57,7 @@ def login():
         if user and user.password == password:
             session['email'] = email
             flash("logged in")
-            return redirect ('/')
+            return redirect ('/addpost')
         else:
             flash('User password incorrect, or user does not exist', 'error')
     return render_template('login.html')
@@ -78,11 +70,17 @@ def signup():
         password = request.form['password']
         verify = request.form['verify']
         if not is_email(email):
-            flash(email + '" does not seem like an email address')
+            flash(email + 'does not seem like an email address')
             return redirect('/signup')
         email_db_count = User.query.filter_by(email=email).count()
         if email_db_count > 0:
-            flash(email + '" is already taken please click login.')
+            flash(email + 'is already taken please click login.')
+            return redirect('/signup')
+        if len(email) < 3:
+            flash('try a differnt username')
+            return redirect('/signup')
+        if len(password) < 3:
+            flash('try a different password')
             return redirect('/signup')
         if password != verify:
             flash('passwords did not match')
@@ -93,7 +91,7 @@ def signup():
         session['user'] = user.email
         return redirect("/")
         
-            #return '<h1>You already have an account.  Please <a href="/login">login.</a></h1>'
+          
     
     else:
         
@@ -111,11 +109,6 @@ def is_email(string):
         domain_dot_index = string.find('.', atsign_index)
         domain_dot_present = domain_dot_index >= 0
         return domain_dot_present
-        
-        
-            
-        
-                
     
 
     #return render_template('signup.html')   
@@ -134,17 +127,23 @@ def display_post():
         #blog_id = int(request.form['id']
         blog_id = (request.args.get('id'))
         blog = Blog.query.filter_by(id=blog_id).first()
+        user_id= (request.args.get('id'))
+        user= User.query.filter_by(id=user_id) 
+        
         if blog_id:
-            return render_template('post.html', blog=blog)
+            return render_template('post.html', blog=blog, user=user)
 
 
 
 @app.route('/blog', methods=['POST', 'GET'])
 def display_blogs():
        
-  
+    
     blogs = Blog.query.all()
-    return render_template('blog.html', blogs=blogs)
+    user_id = (request.args.get('id'))
+    writer_id=(request.args.get('writer_id'))
+    user = User.query.filter_by(id=writer_id)
+    return render_template('blog.html', blogs=blogs, user=user)
 
 
 

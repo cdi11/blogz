@@ -14,9 +14,11 @@
           {% for blog in blogs %}
         
       
-            <form action="POST" method="post" value={{blog.id}}>
+            <span action="POST" method="post" value={{blog.id}}>
                 <li><h2><a href="/post?id={{blog.id}}"> {{blog.title}}</a></h2>
-                <p>{{blog.body}}</p></li>  
+                <h4>{{blog.body}}</h4></span>
+                <h5>Written By<a href="/singleuser?id={{blog.writer_id}}">{{blog.writer.email}}</a></h5></li>
+                
         
             </form>
         
