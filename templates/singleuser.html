@@ -7,7 +7,7 @@
     <h1 style ='color:green'><strong>{{user.email}}</strong></h1>
 </p>
 {% for blog in blogs %}
-    <h3>{{blog.title}}</h3>
+    <h3><a href= '/post?id={{blog.id}}'>{{blog.title}}</h3></a>
     <h5>{{blog.body}}</h5>
     <h5>Written By <a href="/singleuser?id={{user.id}}">{{blog.writer.email}}</a></h5></li>
     

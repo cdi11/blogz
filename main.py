@@ -42,7 +42,7 @@ def index():
     
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'signup']
+    allowed_routes = ['login', 'signup', 'display_blogs', 'index', 'display_post', 'display_user']
     if request.endpoint not in allowed_routes and 'email' not in session:
         return redirect ('/login')
 
@@ -98,9 +98,7 @@ def signup():
         return render_template('signup.html')
 
 def is_email(string):
-    # for our purposes, an email string has an '@' followed by a '.'
-    # there is an embedded language called 'regular expression' that would crunch this implementation down
-    # to a one-liner, but we'll keep it simple:
+
     atsign_index = string.find('@')
     atsign_present = atsign_index >= 0
     if not atsign_present:
