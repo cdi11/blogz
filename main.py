@@ -42,7 +42,7 @@ def index():
     
 @app.before_request
 def require_login():
-    allowed_routes = ['login', 'signup', 'display_blogs', 'index', 'display_post', 'display_user']
+    allowed_routes = ['login', 'signup', 'display_blogs', 'index', 'display_post', 'display_user',]
     if request.endpoint not in allowed_routes and 'email' not in session:
         return redirect ('/login')
 
@@ -85,11 +85,13 @@ def signup():
         if password != verify:
             flash('passwords did not match')
             return redirect('/signup')
+            
+            
         user = User(email=email, password=password)
         db.session.add(user)
         db.session.commit()
-        session['user'] = user.email
-        return redirect("/")
+        session['email'] = user.email
+        return redirect("/addpost")
         
           
     
